@@ -74,5 +74,24 @@ public class Service {
         return listaMedicamentos;
     }
 
-    // Aquí irían los métodos para updateMedicamento y deleteMedicamento
+    public void updateMedicamento(Medicamento med) throws Exception {
+        Medicamento medActual = this.searchMedicamentos(med.getCodigo()).stream().findFirst().orElse(null);
+        if (medActual == null) {
+            throw new Exception("Medicamento no existe.");
+        }
+        // Actualizamos los datos del objeto que ya está en la lista
+        medActual.setNombre(med.getNombre());
+        medActual.setPresentacion(med.getPresentacion());
+        // Guardamos la lista completa con los cambios
+        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    }
+
+    public void deleteMedicamento(String codigo) throws Exception {
+        Medicamento med = this.searchMedicamentos(codigo).stream().findFirst().orElse(null);
+        if (med == null) {
+            throw new Exception("Medicamento no existe.");
+        }
+        listaMedicamentos.remove(med);
+        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    }
 }
