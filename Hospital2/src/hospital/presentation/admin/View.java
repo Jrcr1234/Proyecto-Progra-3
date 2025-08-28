@@ -31,11 +31,17 @@ public class View {
         tabbedPane.addTab("Pacientes", pacientesView.getPanel());
         tabbedPane.addTab("Farmaceutas", farmaceutasView.getPanel());
         tabbedPane.addTab("Medicamentos", medicamentosView.getPanel());
+
+        // --- AÑADIR LA PESTAÑA 'ACERCA DE' ---
+        hospital.presentation.admin.about.View aboutView = new hospital.presentation.admin.about.View();
+        tabbedPane.addTab("Acerca de", aboutView.getPanel());
+        // ===================================
         // Aquí es donde en un futuro crearemos los MVC de cada módulo
         // new hospital.presentation.admin.medicos.Controller(...);
         // new hospital.presentation.admin.pacientes.Controller(...);
         // ... etc.
     }
+
 
     public JPanel getPanel() {
         return panel;

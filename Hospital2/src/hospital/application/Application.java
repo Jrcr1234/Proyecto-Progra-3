@@ -12,8 +12,8 @@ public class Application {
 
         JFrame window = new JFrame("Panel de Administración");
         window.setContentPane(adminView.getPanel());
+        window.setSize(860, 720);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(800, 600);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
