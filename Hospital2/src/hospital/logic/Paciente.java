@@ -24,5 +24,5 @@ public class Paciente {
         return id;
     }
     public String getNombre(){return nombre;}
-    public int getNumeroTelefonico(){return numeroTelefonico;}
+    public String getNumeroTelefonico(){return numeroTelefonico;}
 }
