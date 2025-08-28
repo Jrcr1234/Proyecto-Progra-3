@@ -12,6 +12,7 @@ public class View {
     private JTextField textField4;
     private JButton buscarButton;
     private JButton reporteButton;
+    private JTable table1;
 
     public View() {
         // El constructor está vacío por ahora.
