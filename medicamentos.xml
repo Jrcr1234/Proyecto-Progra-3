@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lista-medicamentos>
+    <medicamento>
+        <codigo>A101</codigo>
+        <nombre>Acetaminofén</nombre>
+        <presentacion>500 mg tableta</presentacion>
+    </medicamento>
+    <medicamento>
+        <codigo>A202</codigo>
+        <nombre>Amoxicilina</nombre>
+        <presentacion>100g tableta</presentacion>
+    </medicamento>
+</lista-medicamentos>

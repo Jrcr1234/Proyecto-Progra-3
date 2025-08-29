@@ -12,10 +12,6 @@ public class Service {
         if (theInstance == null) { theInstance = new Service(); }
         return theInstance;
     }
-
-    // =======================================================
-    // ===        NUEVOS ATRIBUTOS Y CONSTRUCTOR           ===
-    // =======================================================
     private XmlDataManager dataManagerMedicamentos;
     private List<Medicamento> listaMedicamentos;
     // Aquí irían los data managers y listas para pacientes, etc.
@@ -74,23 +70,33 @@ public class Service {
         return listaMedicamentos;
     }
 
-    public void updateMedicamento(Medicamento med) throws Exception {
-        Medicamento medActual = this.searchMedicamentos(med.getCodigo()).stream().findFirst().orElse(null);
-        if (medActual == null) {
-            throw new Exception("Medicamento no existe.");
-        }
-        // Actualizamos los datos del objeto que ya está en la lista
-        medActual.setNombre(med.getNombre());
-        medActual.setPresentacion(med.getPresentacion());
-        // Guardamos la lista completa con los cambios
-        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
-    }
-
-    public void deleteMedicamento(String codigo) throws Exception {
-        Medicamento med = this.searchMedicamentos(codigo).stream().findFirst().orElse(null);
+    public Medicamento readMedicamento(String codigo) throws Exception {
+        Medicamento med = listaMedicamentos.stream()
+                .filter(m -> m.getCodigo().equals(codigo))
+                .findFirst().orElse(null);
         if (med == null) {
             throw new Exception("Medicamento no existe.");
         }
+        return med;
+    }
+
+    // === MÉTODO 'UPDATE' MEJORADO ===
+    public void updateMedicamento(Medicamento med) throws Exception {
+        // Usamos nuestro nuevo método 'read' para encontrar el medicamento
+        Medicamento medActual = this.readMedicamento(med.getCodigo());
+
+        // Actualizamos los datos
+        medActual.setNombre(med.getNombre());
+        medActual.setPresentacion(med.getPresentacion());
+
+        // Guardamos
+        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    }
+
+    // === MÉTODO 'DELETE' MEJORADO ===
+    public void deleteMedicamento(String codigo) throws Exception {
+        // Usamos 'read' para validar que existe antes de borrar
+        Medicamento med = this.readMedicamento(codigo);
         listaMedicamentos.remove(med);
         dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
     }

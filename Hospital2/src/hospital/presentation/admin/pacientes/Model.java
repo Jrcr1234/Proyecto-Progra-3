@@ -1,38 +1,42 @@
 package hospital.presentation.admin.pacientes;
 
 import hospital.logic.Paciente;
-import hospital.presentation.common.AbtractModel;
+import hospital.presentation.common.AbstractModel; // <-- Corregido
+import java.util.ArrayList;
+import java.util.List;
 
-public class Model extends AbtractModel {
+public class Model extends AbstractModel { // <-- Corregido
+    // Constantes para identificar las propiedades que cambian
+    public static final String LIST = "pacientes.list";
+    public static final String CURRENT = "pacientes.current";
 
-    private Paciente current;
-    public static final String CURRENT = "current";
+    private List<Paciente> list; // <-- Atributo añadido para la tabla
+    private Paciente current;    // Atributo para el formulario
 
-    // Constructor recibe un Paciente desde el Controlador
-
-    public Model(Paciente paciente) {
-        this.current = paciente;
-        firePropertyChange(CURRENT, null, this.current); // notifica inicialización
+    public Model() {
+        this.list = new ArrayList<>();
+        this.current = new Paciente();
     }
 
-    // Getter de la persona actual
+    // --- Métodos para la Lista (Tabla) ---
+    public List<Paciente> getList() {
+        return list;
+    }
+
+    public void setList(List<Paciente> list) {
+        List<Paciente> old = this.list;
+        this.list = list;
+        firePropertyChange(LIST, old, this.list); // Notifica el cambio en la lista
+    }
+
+    // --- Métodos para el Paciente Actual (Formulario) ---
     public Paciente getCurrent() {
         return current;
     }
 
-    // Setter de la persona actual con notificación a las vistas
     public void setCurrent(Paciente current) {
         Paciente old = this.current;
         this.current = current;
-        firePropertyChange(CURRENT, old, this.current);
+        firePropertyChange(CURRENT, old, this.current); // Notifica el cambio en el formulario
     }
-
-    // Método auxiliar opcional: información resumida del paciente
-    public String getPacienteInfo() {
-        if (current == null) return "No hay paciente cargado.";
-        return "ID: " + current.getId() +
-                ", Nombre: " + current.getNombre() +
-                ", Numero telefonico: " + current.getNumeroTelefonico();
-    }
-
 }

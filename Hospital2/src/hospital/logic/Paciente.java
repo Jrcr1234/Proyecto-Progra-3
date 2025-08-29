@@ -1,28 +1,58 @@
 package hospital.logic;
 
-public class Paciente {
+import java.util.Date;
 
+public class Paciente {
     private String id;
     private String nombre;
-    private int numeroTelefonico;
+    private Date fechaNacimiento;
+    private String telefono;
 
-
-    Paciente(String iD,String nombre,int numero){
-
-        this.id=iD;
-        this.nombre=nombre;
-        this.numeroTelefonico=numero;
-
+    // --- ASEGÚRATE DE QUE AMBOS CONSTRUCTORES SEAN 'public' ---
+    public Paciente() { // <--- CORRECCIÓN AQUÍ
+        this.id = "";
+        this.nombre = "";
+        this.fechaNacimiento = new Date();
+        this.telefono = "";
     }
-    Paciente(){
-        this.id=" ";
-        this.numeroTelefonico=0;
-        this.nombre=" ";
 
+    public Paciente(String id, String nombre, Date fechaNacimiento, String telefono) { // <--- Y AQUÍ
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefono = telefono;
     }
+
+    // GETTERS Y SETTERS
     public String getId() {
         return id;
     }
-    public String getNombre(){return nombre;}
-    public String getNumeroTelefonico(){return numeroTelefonico;}
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 }
