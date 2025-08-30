@@ -4,6 +4,7 @@ import hospital.logic.Medicamento;
 import hospital.logic.Service;
 import javax.swing.JOptionPane;
 import java.util.List;
+import javax.swing.SwingWorker;
 
 public class Controller {
     private View view;
@@ -34,31 +35,47 @@ public class Controller {
     }
 
     // === MÉTODO 'SAVE' REFINADO ===
-    public void save(Medicamento medFromForm) {
+    public void save(Medicamento medicamento) { // o save(Medicamento med)
         try {
-            // Validaciones básicas de la interfaz
-            if (medFromForm.getCodigo().isEmpty() || medFromForm.getNombre().isEmpty()) {
+            if (medicamento.getCodigo().isEmpty() || medicamento.getNombre().isEmpty()) {
                 throw new Exception("El código y el nombre son requeridos.");
             }
 
-            // Lógica para decidir si es CREAR o ACTUALIZAR
-            if (model.getCurrent().getCodigo().isEmpty()) {
-                // El 'current' del modelo estaba vacío, por lo tanto, es un medicamento NUEVO
-                Service.instance().createMedicamento(medFromForm);
-                JOptionPane.showMessageDialog(view.getPanel(), "Medicamento agregado exitosamente.");
-            } else {
-                // El 'current' del modelo tenía datos, por lo tanto, es una MODIFICACIÓN
-                Service.instance().updateMedicamento(medFromForm);
-                JOptionPane.showMessageDialog(view.getPanel(), "Medicamento modificado exitosamente.");
-            }
+            // --- CÓDIGO SwingWorker CORREGIDO ---
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    // Tarea pesada que se ejecuta en un hilo de fondo (segundo plano)
+                    if (model.getCurrent().getCodigo().isEmpty()) {
+                        Service.instance().createMedicamento(medicamento);
+                    } else {
+                        Service.instance().updateMedicamento(medicamento);
+                    }
+                    return null; // Este método debe devolver algo (en este caso, nada 'Void')
+                }
 
-            // Limpia el formulario y refresca la tabla después de cualquier operación exitosa
-            this.clear();
-            this.search("");
+                @Override
+                protected void done() {
+                    // Tarea ligera que se ejecuta de vuelta en el hilo de la interfaz
+                    // una vez que 'doInBackground' ha terminado.
+                    try {
+                        get(); // El método get() captura cualquier excepción que haya ocurrido en doInBackground
+                        JOptionPane.showMessageDialog(view.getPanel(), "Datos guardados exitosamente.");
+
+                        // Refrescamos la interfaz de forma segura
+                        clear();
+                        search(""); // O search("") para medicamentos
+
+                    } catch (Exception ex) {
+                        // Muestra el error original que ocurrió en el hilo de fondo
+                        JOptionPane.showMessageDialog(view.getPanel(), ex.getCause().getMessage(), "Error al guardar", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            worker.execute(); // Inicia el trabajador
 
         } catch (Exception e) {
-            // Atrapa cualquier error del Service (ej. "código ya existe") o de las validaciones
-            JOptionPane.showMessageDialog(view.getPanel(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view.getPanel(), e.getMessage(), "Error de validación", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -67,13 +84,36 @@ public class Controller {
         model.setCurrent(med);
     }
 
+    // método delete
+
     public void delete(int row) {
         try {
+            // Obtenemos el medicamento a borrar ANTES de iniciar el hilo de fondo
             Medicamento med = model.getList().get(row);
-            Service.instance().deleteMedicamento(med.getCodigo());
-            this.search(""); // Refresca la tabla
+
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    // Trabajo pesado en segundo plano: borrar del archivo
+                    Service.instance().deleteMedicamento(med.getCodigo());
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    // Actualización de la interfaz cuando el borrado termina
+                    try {
+                        get();
+                        JOptionPane.showMessageDialog(view.getPanel(), "Medicamento eliminado exitosamente.");
+                        search(""); // Refresca la tabla
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(view.getPanel(), e.getCause().getMessage(), "Error al borrar", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }.execute();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(view.getPanel(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view.getPanel(), "No se pudo seleccionar el medicamento a borrar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

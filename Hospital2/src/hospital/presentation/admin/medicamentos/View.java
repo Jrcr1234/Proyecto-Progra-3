@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.event.ListSelectionEvent;
+import hospital.presentation.util.GuiUtils;
 
 public class View implements PropertyChangeListener {
     private JPanel panel;
@@ -25,6 +26,7 @@ public class View implements PropertyChangeListener {
 
     private Controller controller;
     private Model model;
+    private TableModel medicamentosTableModel;
 
     public View() {
         // === CÓDIGO PARA AÑADIR ICONOS A LOS BOTONES ===
@@ -32,16 +34,16 @@ public class View implements PropertyChangeListener {
             int iconSize = 24;
 
 
-            ImageIcon guardarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
+            ImageIcon guardarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
             guardarBtn.setIcon(guardarIcon);
 
-            ImageIcon borrarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), iconSize, iconSize);
+            ImageIcon borrarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), iconSize, iconSize);
             borrarBtn.setIcon(borrarIcon);
 
-            ImageIcon limpiarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/limpiar.png")), iconSize, iconSize);
+            ImageIcon limpiarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/limpiar.png")), iconSize, iconSize);
             limpiarBtn.setIcon(limpiarIcon);
 
-            ImageIcon buscarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/buscar.png")), iconSize, iconSize);
+            ImageIcon buscarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/buscar.png")), iconSize, iconSize);
             buscarBtn.setIcon(buscarIcon);
 
         } catch (Exception e) {
@@ -84,33 +86,37 @@ public class View implements PropertyChangeListener {
     public void setModel(Model model) {
         this.model = model;
         model.addPropertyChangeListener(this);
+
+        this.medicamentosTableModel = new TableModel(model.getList());
+        this.medicamentosTbl.setModel(medicamentosTableModel);
     }
 
-    // --- propertyChange (Corregido para usar guardarBtn) ---
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(Model.LIST)) {
-            medicamentosTbl.setModel(new TableModel(model.getList()));
-        }
+        // --- Lógica para actualizar el formulario (esta parte está bien) ---
         if (evt.getPropertyName().equals(Model.CURRENT)) {
             codigoFld.setText(model.getCurrent().getCodigo());
             nombreFld.setText(model.getCurrent().getNombre());
             presentacionFld.setText(model.getCurrent().getPresentacion());
 
             boolean isNew = model.getCurrent().getCodigo().isEmpty();
-            guardarBtn.setEnabled(true); // Usamos el nombre correcto
-            borrarBtn.setEnabled(!isNew);  // Usamos el nombre correcto
+            guardarBtn.setEnabled(true);
+            borrarBtn.setEnabled(!isNew);
             codigoFld.setEditable(isNew);
-
         }
-        panel.revalidate();
-    }
 
-    // === MÉTODO 'scaleIcon' QUE FALTABA ===
-    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImg);
+        // --- Lógica para actualizar la TABLA (esta es la parte que mejoramos) ---
+        if (evt.getPropertyName().equals(Model.LIST)) {
+            // Usamos invokeLater para asegurar que la actualización visual se procese correctamente
+            SwingUtilities.invokeLater(() -> {
+                // Le decimos a nuestro TableModel existente que actualice sus datos
+                // Asegúrate de que el nombre de la variable sea el correcto (medicamentosTableModel o pacientesTableModel)
+                medicamentosTableModel.setRows(model.getList());
+                // Forzamos al panel a redibujarse
+                panel.revalidate();
+                panel.repaint();
+            });
+        }
     }
 
     public JPanel getPanel() { return panel; }

@@ -53,29 +53,41 @@ public class Service {
     // ===     NUEVOS MÉTODOS CRUD PARA MEDICAMENTOS       ===
     // =======================================================
 
+    // En hospital.logic/Service.java
+
+// --- Métodos CRUD para Medicamentos ---
+
     public void createMedicamento(Medicamento med) throws Exception {
-        // 1. Valida la regla de negocio: que el código no esté repetido
         if (listaMedicamentos.stream().anyMatch(m -> m.getCodigo().equals(med.getCodigo()))) {
             throw new Exception("El código del medicamento ya existe.");
         }
-        // 2. Agrega el nuevo medicamento a la lista en memoria
+        // PASO 1: AÑADE EL NUEVO MEDICAMENTO A LA LISTA EN MEMORIA
         listaMedicamentos.add(med);
-        // 3. Guarda la lista completa y actualizada en el archivo XML
+
+        // PASO 2: GUARDA LA LISTA COMPLETA Y ACTUALIZADA AL ARCHIVO XML
         dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
     }
 
-    public List<Medicamento> searchMedicamentos(String filtro) {
-        // Busca por código o nombre (insensible a mayúsculas) y devuelve una lista con los resultados
-        return listaMedicamentos.stream()
-                .filter(m -> m.getCodigo().contains(filtro) || m.getNombre().toLowerCase().contains(filtro.toLowerCase()))
-                .collect(Collectors.toList());
+    public void updateMedicamento(Medicamento med) throws Exception {
+        Medicamento medActual = this.readMedicamento(med.getCodigo()); // readMedicamento busca en la lista en memoria
+
+        // PASO 1: MODIFICA EL OBJETO EN LA LISTA EN MEMORIA
+        medActual.setNombre(med.getNombre());
+        medActual.setPresentacion(med.getPresentacion());
+
+        // PASO 2: GUARDA LA LISTA ACTUALIZADA
+        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
     }
 
-    public List<Medicamento> getMedicamentos() {
-        // Devuelve la lista completa de medicamentos
-        return listaMedicamentos;
-    }
+    public void deleteMedicamento(String codigo) throws Exception {
+        Medicamento med = this.readMedicamento(codigo);
 
+        // PASO 1: ELIMINA DE LA LISTA EN MEMORIA
+        listaMedicamentos.remove(med);
+
+        // PASO 2: GUARDA LA LISTA ACTUALIZADA
+        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    }
     public Medicamento readMedicamento(String codigo) throws Exception {
         Medicamento med = listaMedicamentos.stream()
                 .filter(m -> m.getCodigo().equals(codigo))
@@ -85,26 +97,16 @@ public class Service {
         }
         return med;
     }
-
-    // === MÉTODO 'UPDATE' MEJORADO ===
-    public void updateMedicamento(Medicamento med) throws Exception {
-        // Usamos nuestro nuevo método 'read' para encontrar el medicamento
-        Medicamento medActual = this.readMedicamento(med.getCodigo());
-
-        // Actualizamos los datos
-        medActual.setNombre(med.getNombre());
-        medActual.setPresentacion(med.getPresentacion());
-
-        // Guardamos
-        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    public List<Medicamento> getMedicamentos() {
+        // Devuelve la lista completa de medicamentos que está en memoria
+        return listaMedicamentos;
     }
 
-    // === MÉTODO 'DELETE' MEJORADO ===
-    public void deleteMedicamento(String codigo) throws Exception {
-        // Usamos 'read' para validar que existe antes de borrar
-        Medicamento med = this.readMedicamento(codigo);
-        listaMedicamentos.remove(med);
-        dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    public List<Medicamento> searchMedicamentos(String filtro) {
+        // Busca en la lista en memoria por código o por nombre
+        return listaMedicamentos.stream()
+                .filter(m -> m.getCodigo().contains(filtro) || m.getNombre().toLowerCase().contains(filtro.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     // =======================================================

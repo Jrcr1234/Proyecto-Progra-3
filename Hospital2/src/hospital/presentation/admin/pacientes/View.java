@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import hospital.presentation.util.GuiUtils;
 
 public class View implements PropertyChangeListener {
     // --- Atributos con nombres estandarizados ---
@@ -39,19 +40,19 @@ public class View implements PropertyChangeListener {
             int iconSize = 24;
 
 
-            ImageIcon guardarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
+            ImageIcon guardarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
             guardarBtn.setIcon(guardarIcon);
 
-            ImageIcon borrarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), iconSize, iconSize);
+            ImageIcon borrarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), iconSize, iconSize);
             borrarBtn.setIcon(borrarIcon);
 
-            ImageIcon limpiarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/limpiar.png")), iconSize, iconSize);
+            ImageIcon limpiarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/limpiar.png")), iconSize, iconSize);
             limpiarBtn.setIcon(limpiarIcon);
 
-            ImageIcon buscarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/buscar.png")), iconSize, iconSize);
+            ImageIcon buscarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/buscar.png")), iconSize, iconSize);
             buscarBtn.setIcon(buscarIcon);
 
-            ImageIcon reporteIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/reporte.png")), iconSize, iconSize);
+            ImageIcon reporteIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/reporte.png")), iconSize, iconSize);
             reporteBtn.setIcon(reporteIcon);
 
         } catch (Exception e) {
@@ -141,12 +142,6 @@ public class View implements PropertyChangeListener {
         // ===================================================
     }
 
-    // === MÉTODO 'scaleIcon' QUE FALTABA ===
-    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImg);
-    }
 
     public JPanel getPanel() { return panel; }
 }

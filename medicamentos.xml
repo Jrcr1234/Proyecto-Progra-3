@@ -20,4 +20,9 @@
         <nombre>avi</nombre>
         <presentacion>10g</presentacion>
     </medicamento>
+    <medicamento>
+        <codigo>555</codigo>
+        <nombre>joih</nombre>
+        <presentacion>12g</presentacion>
+    </medicamento>
 </lista-medicamentos>

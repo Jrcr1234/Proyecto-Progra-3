@@ -6,30 +6,30 @@ import java.util.List;
 
 public class TableModel extends AbstractTableModel {
     private List<Medicamento> rows;
-    // Define los nombres que aparecerán en las cabeceras de la tabla
     private final String[] cols = {"Código", "Nombre", "Presentación"};
 
     public TableModel(List<Medicamento> rows) {
         this.rows = rows;
     }
 
-    @Override
-    public int getRowCount() { // Le dice a la tabla cuántas filas de datos hay
-        return rows.size();
+    // === MÉTODO AÑADIDO ===
+    public void setRows(List<Medicamento> rows) {
+        this.rows = rows;
+        this.fireTableDataChanged();
     }
+    // ======================
 
     @Override
-    public int getColumnCount() { // Le dice a la tabla cuántas columnas debe dibujar
-        return cols.length;
-    }
+    public int getRowCount() { return rows.size(); }
 
     @Override
-    public String getColumnName(int col) { // Le da el nombre a cada cabecera de columna
-        return cols[col];
-    }
+    public int getColumnCount() { return cols.length; }
 
     @Override
-    public Object getValueAt(int row, int col) { // Pide el valor para una celda específica
+    public String getColumnName(int col) { return cols[col]; }
+
+    @Override
+    public Object getValueAt(int row, int col) {
         Medicamento med = rows.get(row);
         switch (col) {
             case 0: return med.getCodigo();
