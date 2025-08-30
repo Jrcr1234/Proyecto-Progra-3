@@ -102,7 +102,6 @@ public class View implements PropertyChangeListener {
             borrarBtn.setEnabled(!isNew);  // Usamos el nombre correcto
             codigoFld.setEditable(isNew);
 
-            // Borramos la referencia a modificarBtn que no existe
         }
         panel.revalidate();
     }

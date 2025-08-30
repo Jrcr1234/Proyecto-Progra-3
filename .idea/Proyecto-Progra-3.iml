@@ -5,5 +5,27 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC>
+          <root url="file://$MODULE_DIR$/../Proyecto/jcalendar-1.4/doc/api" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../Proyecto/jcalendar-1.4/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../Proyecto/jcalendar-1.4.zip!/doc/api" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Proyecto/jcalendar-1.4.zip!/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

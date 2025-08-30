@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lista-pacientes>
+    <paciente>
+        <id>111</id>
+        <nombre>Ferananod</nombre>
+        <fechaNacimiento>2015-08-14T01:05:52.537-06:00</fechaNacimiento>
+        <telefono>553322221</telefono>
+    </paciente>
+    <paciente>
+        <id>222</id>
+        <nombre>Ana</nombre>
+        <fechaNacimiento>2011-08-12T01:06:41.339-06:00</fechaNacimiento>
+        <telefono>444444</telefono>
+    </paciente>
+    <paciente>
+        <id>123</id>
+        <nombre>fer</nombre>
+        <fechaNacimiento>2012-08-04T01:16:11.607-06:00</fechaNacimiento>
+        <telefono>456789</telefono>
+    </paciente>
+</lista-pacientes>

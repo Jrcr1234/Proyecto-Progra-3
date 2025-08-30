@@ -122,7 +122,7 @@
           <scrollpane id="cafbc">
             <constraints border-constraint="Center"/>
             <properties/>
-            <border type="none"/>
+            <border type="none" title="Lista"/>
             <children>
               <component id="e921d" class="javax.swing.JTable" binding="medicamentosTbl">
                 <constraints/>

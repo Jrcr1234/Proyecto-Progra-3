@@ -1,7 +1,9 @@
 package hospital.presentation.admin.pacientes;
 
 import hospital.logic.Paciente;
-import javax.swing.JDialog;
+import hospital.logic.Service;
+import javax.swing.JOptionPane;
+import java.util.List;
 
 public class Controller {
     private View view;
@@ -12,27 +14,63 @@ public class Controller {
         this.model = model;
         view.setModel(model);
         view.setController(this);
+        // Carga inicial de datos
+        try {
+            model.setList(Service.instance().getPacientes());
+            model.setCurrent(new Paciente());
+        } catch (Exception e) {
+            // Manejar error si el Service no puede iniciar
+        }
     }
 
-    // === AÑADE ESTOS MÉTODOS 'ESQUELETO' ===
     public void guardarPaciente(Paciente paciente) {
-        // La lógica para guardar irá aquí...
-        System.out.println("Guardando paciente: " + paciente.getNombre());
+        try {
+            // Validaciones de la interfaz
+            if (paciente.getId().isEmpty() || paciente.getNombre().isEmpty()) {
+                throw new Exception("La cédula y el nombre son requeridos.");
+            }
+
+            // Lógica para decidir si es CREAR o ACTUALIZAR
+            if (model.getCurrent().getId().isEmpty()) {
+                // El paciente es nuevo
+                Service.instance().createPaciente(paciente);
+                JOptionPane.showMessageDialog(view.getPanel(), "Paciente agregado exitosamente.");
+            } else {
+                // El paciente ya existía, es una modificación
+                Service.instance().updatePaciente(paciente);
+                JOptionPane.showMessageDialog(view.getPanel(), "Paciente modificado exitosamente.");
+            }
+
+            this.clear();
+            this.buscarPaciente("");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(view.getPanel(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void borrarPaciente(int rowIndex) {
-        // La lógica para borrar irá aquí...
-        System.out.println("Borrando paciente en la fila: " + rowIndex);
+        try {
+            Paciente paciente = model.getList().get(rowIndex);
+            Service.instance().deletePaciente(paciente.getId());
+            this.buscarPaciente(""); // Refresca la tabla
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(view.getPanel(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void buscarPaciente(String filtro) {
-        // La lógica para buscar irá aquí...
-        System.out.println("Buscando paciente con filtro: " + filtro);
+        try {
+            List<Paciente> rows = Service.instance().searchPacientes(filtro);
+            model.setList(rows);
+        } catch (Exception e) {
+            // Manejar error si la búsqueda falla
+        }
     }
 
     public void generarReporte() {
-        // La lógica para el reporte irá aquí...
-        System.out.println("Generando reporte...");
+        // La lógica para generar el reporte de pacientes irá aquí...
+        JOptionPane.showMessageDialog(view.getPanel(), "Funcionalidad de reporte aún no implementada.");
     }
 
     public void clear() {

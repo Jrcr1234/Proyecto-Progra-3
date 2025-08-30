@@ -10,4 +10,14 @@
         <nombre>Amoxicilina</nombre>
         <presentacion>100g tableta</presentacion>
     </medicamento>
+    <medicamento>
+        <codigo>A203</codigo>
+        <nombre>Acetaminofén</nombre>
+        <presentacion>100 mg tableta</presentacion>
+    </medicamento>
+    <medicamento>
+        <codigo>121</codigo>
+        <nombre>avi</nombre>
+        <presentacion>10g</presentacion>
+    </medicamento>
 </lista-medicamentos>

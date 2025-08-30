@@ -14,17 +14,23 @@ public class Service {
     }
     private XmlDataManager dataManagerMedicamentos;
     private List<Medicamento> listaMedicamentos;
-    // Aquí irían los data managers y listas para pacientes, etc.
+    private XmlDataManager dataManagerPacientes;
+    private List<Paciente> listaPacientes;
+    // Aquí irían los data managers y listas para medicos, etc.
 
     private Service() {
         try {
             // Le decimos dónde guardar el archivo XML de medicamentos
             dataManagerMedicamentos = new XmlDataManager("medicamentos.xml");
+            dataManagerPacientes = new XmlDataManager("pacientes.xml");
+
             // Cargamos la lista de medicamentos desde el XML al iniciar la aplicación
             listaMedicamentos = dataManagerMedicamentos.cargarMedicamentos();
+            listaPacientes = dataManagerPacientes.cargarPacientes();
         } catch (Exception e) {
             // Si hay un error (ej. el archivo no existe), empezamos con una lista vacía
             listaMedicamentos = new ArrayList<>();
+            listaPacientes = new ArrayList<>();
         }
     }
 
@@ -99,5 +105,73 @@ public class Service {
         Medicamento med = this.readMedicamento(codigo);
         listaMedicamentos.remove(med);
         dataManagerMedicamentos.guardarMedicamentos(listaMedicamentos);
+    }
+
+    // =======================================================
+// ===       MÉTODOS CRUD COMPLETOS Y CORRECTOS PARA PACIENTES     ===
+// =======================================================
+
+    public void createPaciente(Paciente p) throws Exception {
+        if (p.getId().isEmpty() || p.getNombre().isEmpty()) {
+            throw new Exception("Cédula y Nombre son requeridos.");
+        }
+        if (listaPacientes.stream().anyMatch(pa -> pa.getId().equals(p.getId()))) {
+            throw new Exception("La cédula del paciente ya existe.");
+        }
+        // 1. Modifica la lista en memoria
+        listaPacientes.add(p);
+        // 2. Guarda la lista actualizada en el archivo
+        dataManagerPacientes.guardarPacientes(listaPacientes);
+    }
+
+    public Paciente readPaciente(String id) throws Exception {
+        // Busca en la lista en memoria
+        Paciente p = listaPacientes.stream()
+                .filter(pa -> pa.getId().equals(id))
+                .findFirst().orElse(null);
+        if (p == null) {
+            throw new Exception("Paciente no existe.");
+        }
+        return p;
+    }
+
+    public void updatePaciente(Paciente p) throws Exception {
+        Paciente pacienteActual;
+        try {
+            // 1. Busca en la lista en memoria
+            pacienteActual = this.readPaciente(p.getId());
+        } catch (Exception e) {
+            throw new Exception("Paciente a modificar no existe.");
+        }
+
+        // 2. Modifica el objeto que ya está en la lista en memoria
+        pacienteActual.setNombre(p.getNombre());
+        pacienteActual.setTelefono(p.getTelefono());
+        pacienteActual.setFechaNacimiento(p.getFechaNacimiento());
+
+        // 3. Guarda la lista completa y actualizada en el archivo
+        dataManagerPacientes.guardarPacientes(listaPacientes);
+    }
+
+    public void deletePaciente(String id) throws Exception {
+        // 1. readPaciente valida que exista y lo devuelve
+        Paciente p = this.readPaciente(id);
+
+        // 2. Modifica la lista en memoria
+        listaPacientes.remove(p);
+
+        // 3. Guarda la lista actualizada en el archivo
+        dataManagerPacientes.guardarPacientes(listaPacientes);
+    }
+    public List<Paciente> getPacientes() {
+        // Devuelve la lista completa de pacientes que está en memoria
+        return listaPacientes;
+    }
+
+    public List<Paciente> searchPacientes(String filtro) {
+        // Busca en la lista en memoria por cédula o por nombre
+        return listaPacientes.stream()
+                .filter(p -> p.getId().contains(filtro) || p.getNombre().toLowerCase().contains(filtro.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

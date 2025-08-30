@@ -1,22 +1,26 @@
 package hospital.logic;
 
+// --- IMPORTS AÑADIDOS PARA XML ---
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+// ---------------------------------
 import java.util.Date;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Paciente {
     private String id;
     private String nombre;
     private Date fechaNacimiento;
     private String telefono;
 
-    // --- ASEGÚRATE DE QUE AMBOS CONSTRUCTORES SEAN 'public' ---
-    public Paciente() { // <--- CORRECCIÓN AQUÍ
+    public Paciente() {
         this.id = "";
         this.nombre = "";
-        this.fechaNacimiento = new Date();
+        this.fechaNacimiento = null;
         this.telefono = "";
     }
 
-    public Paciente(String id, String nombre, Date fechaNacimiento, String telefono) { // <--- Y AQUÍ
+    public Paciente(String id, String nombre, Date fechaNacimiento, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;

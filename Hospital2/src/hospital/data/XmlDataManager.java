@@ -1,6 +1,7 @@
 package hospital.data;
 
 import hospital.logic.Medicamento;
+import hospital.logic.Paciente;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -29,6 +30,19 @@ class MedicamentosWrapper {
     }
 }
 
+// ===NUEVA CLASE WRAPPER PARA PACIENTES ===
+@XmlRootElement(name = "lista-pacientes")
+class PacientesWrapper {
+    private List<Paciente> pacientes;
+
+    public PacientesWrapper() { pacientes = new ArrayList<>(); }
+
+    @XmlElement(name = "paciente")
+    public List<Paciente> getPacientes() { return pacientes; }
+    public void setPacientes(List<Paciente> pacientes) { this.pacientes = pacientes; }
+}
+// =======================================================
+
 public class XmlDataManager {
     private String filePath;
     private JAXBContext context;
@@ -55,4 +69,26 @@ public class XmlDataManager {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(wrapper, new File(filePath));
     }
+
+    // === NUEVOS MÉTODOS PARA PACIENTES ===
+    public List<Paciente> cargarPacientes() throws Exception {
+        JAXBContext context = JAXBContext.newInstance(PacientesWrapper.class);
+        File file = new File("pacientes.xml");
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        PacientesWrapper wrapper = (PacientesWrapper) unmarshaller.unmarshal(file);
+        return wrapper.getPacientes();
+    }
+
+    public void guardarPacientes(List<Paciente> pacientes) throws Exception {
+        JAXBContext context = JAXBContext.newInstance(PacientesWrapper.class);
+        PacientesWrapper wrapper = new PacientesWrapper();
+        wrapper.setPacientes(pacientes);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(wrapper, new File("pacientes.xml"));
+    }
+    // ========================================================
 }

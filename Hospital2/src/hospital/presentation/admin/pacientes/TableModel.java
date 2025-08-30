@@ -12,6 +12,11 @@ public class TableModel extends AbstractTableModel {
     public TableModel(List<Paciente> rows) {
         this.rows = rows;
     }
+    public void setRows(List<Paciente> rows) {
+        this.rows = rows;
+        // Esta es la señal oficial para que la JTable se redibuje completamente
+        this.fireTableDataChanged();
+    }
 
     @Override
     public int getRowCount() { return rows.size(); }

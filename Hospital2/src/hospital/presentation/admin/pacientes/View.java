@@ -1,32 +1,64 @@
 package hospital.presentation.admin.pacientes;
 
 import hospital.logic.Paciente;
+
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Date;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 
 public class View implements PropertyChangeListener {
     // --- Atributos con nombres estandarizados ---
     private JPanel panel;
+    private JPanel formularioPanel;
+    private JPanel busquedaPanel;
+    private JPanel tablaPanel;
     private JTable pacientesTbl;
     private JTextField idFld;
     private JTextField nombreFld;
     private JTextField telefonoFld;
+    private JPanel dateChooserPanel;
     // JDateChooser para la fecha
-    // private com.toedter.calendar.JDateChooser fechaNacimientoFld;
+    private com.toedter.calendar.JDateChooser fechaNacimientoFld;
     private JButton guardarBtn;
     private JButton borrarBtn;
     private JButton buscarBtn;
     private JTextField buscarFld;
-    private JButton reporteBtn;
     private JButton limpiarBtn;
+    private JButton reporteBtn;
 
     private Controller controller;
     private Model model;
+    private TableModel pacientesTableModel;
 
     public View() {
+
+        // === CÓDIGO PARA AÑADIR ICONOS A LOS BOTONES ===
+        try {
+            int iconSize = 24;
+
+
+            ImageIcon guardarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
+            guardarBtn.setIcon(guardarIcon);
+
+            ImageIcon borrarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), iconSize, iconSize);
+            borrarBtn.setIcon(borrarIcon);
+
+            ImageIcon limpiarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/limpiar.png")), iconSize, iconSize);
+            limpiarBtn.setIcon(limpiarIcon);
+
+            ImageIcon buscarIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/buscar.png")), iconSize, iconSize);
+            buscarBtn.setIcon(buscarIcon);
+
+            ImageIcon reporteIcon = scaleIcon(new ImageIcon(getClass().getResource("/icons/reporte.png")), iconSize, iconSize);
+            reporteBtn.setIcon(reporteIcon);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar los iconos de los botones: " + e.getMessage());
+        }
+        // =======================================================
+
         // --- ActionListeners Completos ---
         guardarBtn.addActionListener(e -> {
             // Recolectamos los datos del formulario
@@ -34,7 +66,7 @@ public class View implements PropertyChangeListener {
             paciente.setId(idFld.getText());
             paciente.setNombre(nombreFld.getText());
             paciente.setTelefono(telefonoFld.getText());
-            // paciente.setFechaNacimiento(fechaNacimientoFld.getDate());
+            paciente.setFechaNacimiento(fechaNacimientoFld.getDate());
 
             // Llamamos al controller CON el paciente
             controller.guardarPaciente(paciente);
@@ -63,19 +95,29 @@ public class View implements PropertyChangeListener {
                 }
             }
         });
+
+        // === CÓDIGO PARA CREAR Y AÑADIR EL JDateChooser MANUALMENTE ===
+        fechaNacimientoFld = new com.toedter.calendar.JDateChooser();
+        dateChooserPanel.setLayout(new BorderLayout()); // Asegura el layout
+        dateChooserPanel.add(fechaNacimientoFld, BorderLayout.CENTER);
+        // ==============================================================
     }
 
     public void setController(Controller controller) { this.controller = controller; }
     public void setModel(Model model) {
         this.model = model;
-        model.addPropertyChangeListener(this);
+        model.addPropertyChangeListener(this); // La vista se suscribe a futuros cambios
+
+        // AHORA QUE TENEMOS EL MODELO, INICIALIZAMOS LA TABLA
+        this.pacientesTableModel = new TableModel(model.getList());
+        this.pacientesTbl.setModel(pacientesTableModel);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // Actualiza la JTable cuando la lista en el modelo cambia
         if (evt.getPropertyName().equals(Model.LIST)) {
-            pacientesTbl.setModel(new TableModel(model.getList()));
+            pacientesTableModel.setRows(model.getList());
         }
         // Actualiza el formulario cuando el 'current' en el modelo cambia
         if (evt.getPropertyName().equals(Model.CURRENT)) {
@@ -83,7 +125,7 @@ public class View implements PropertyChangeListener {
             idFld.setText(p.getId());
             nombreFld.setText(p.getNombre());
             telefonoFld.setText(p.getTelefono());
-            // fechaNacimientoFld.setDate(p.getFechaNacimiento());
+            fechaNacimientoFld.setDate(p.getFechaNacimiento());
 
             // Habilita/deshabilita el botón y el campo de ID
             boolean isNew = p.getId().isEmpty();
@@ -92,6 +134,18 @@ public class View implements PropertyChangeListener {
             borrarBtn.setEnabled(!isNew);
             idFld.setEditable(isNew);
         }
+
+        // === LÍNEA AÑADIDA PARA FORZAR EL REFRESCO VISUAL ===
+        panel.revalidate();
+        panel.repaint();
+        // ===================================================
+    }
+
+    // === MÉTODO 'scaleIcon' QUE FALTABA ===
+    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImg);
     }
 
     public JPanel getPanel() { return panel; }
