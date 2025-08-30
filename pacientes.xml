@@ -2,7 +2,7 @@
 <lista-pacientes>
     <paciente>
         <id>111</id>
-        <nombre>Ferananod</nombre>
+        <nombre>Fernando</nombre>
         <fechaNacimiento>2015-08-14T01:05:52.537-06:00</fechaNacimiento>
         <telefono>553322221</telefono>
     </paciente>
@@ -19,9 +19,9 @@
         <telefono>456789</telefono>
     </paciente>
     <paciente>
-        <id>333</id>
+        <id>555</id>
         <nombre>jose</nombre>
-        <fechaNacimiento>2006-08-17T16:58:21.437-06:00</fechaNacimiento>
-        <telefono>4569687</telefono>
+        <fechaNacimiento>2011-08-18T17:15:44.859-06:00</fechaNacimiento>
+        <telefono>56545455</telefono>
     </paciente>
 </lista-pacientes>

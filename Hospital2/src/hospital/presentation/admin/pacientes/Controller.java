@@ -69,7 +69,7 @@ public class Controller {
         }
     }
 
-    // En tu Controller.java del paquete de pacientes
+
 
     public void borrarPaciente(int rowIndex) {
         try {

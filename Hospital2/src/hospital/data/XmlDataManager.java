@@ -2,6 +2,7 @@ package hospital.data;
 
 import hospital.logic.Medicamento;
 import hospital.logic.Paciente;
+import hospital.logic.Usuario;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -42,6 +43,16 @@ class PacientesWrapper {
     public void setPacientes(List<Paciente> pacientes) { this.pacientes = pacientes; }
 }
 // =======================================================
+
+// === NUEVO WRAPPER PARA USUARIOS ===
+@XmlRootElement(name = "lista-usuarios")
+class UsuariosWrapper {
+    private List<Usuario> usuarios;
+    public UsuariosWrapper() { usuarios = new ArrayList<>(); }
+    @XmlElement(name = "usuario")
+    public List<Usuario> getUsuarios() { return usuarios; }
+    public void setUsuarios(List<Usuario> usuarios) { this.usuarios = usuarios; }
+}
 
 public class XmlDataManager {
     private String filePath;
@@ -91,4 +102,23 @@ public class XmlDataManager {
         marshaller.marshal(wrapper, new File("pacientes.xml"));
     }
     // ========================================================
+
+    // === NUEVOS MÉTODOS PARA USUARIOS ===
+    public List<Usuario> cargarUsuarios() throws Exception {
+        JAXBContext context = JAXBContext.newInstance(UsuariosWrapper.class);
+        File file = new File("usuarios.xml");
+        if (!file.exists()) return new ArrayList<>();
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        UsuariosWrapper wrapper = (UsuariosWrapper) unmarshaller.unmarshal(file);
+        return wrapper.getUsuarios();
+    }
+
+    public void guardarUsuarios(List<Usuario> usuarios) throws Exception {
+        JAXBContext context = JAXBContext.newInstance(UsuariosWrapper.class);
+        UsuariosWrapper wrapper = new UsuariosWrapper();
+        wrapper.setUsuarios(usuarios);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(wrapper, new File("usuarios.xml"));
+    }
 }

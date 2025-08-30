@@ -16,37 +16,75 @@ public class Service {
     private List<Medicamento> listaMedicamentos;
     private XmlDataManager dataManagerPacientes;
     private List<Paciente> listaPacientes;
-    // Aquí irían los data managers y listas para medicos, etc.
+    private XmlDataManager dataManagerUsuarios;
+    private List<Usuario> listaUsuarios;
+    // Aquí irían los data managers y listas para farmaceutas, etc.
 
     private Service() {
         try {
             // Le decimos dónde guardar el archivo XML de medicamentos
             dataManagerMedicamentos = new XmlDataManager("medicamentos.xml");
             dataManagerPacientes = new XmlDataManager("pacientes.xml");
+            dataManagerUsuarios = new XmlDataManager("usuarios.xml");
 
             // Cargamos la lista de medicamentos desde el XML al iniciar la aplicación
             listaMedicamentos = dataManagerMedicamentos.cargarMedicamentos();
             listaPacientes = dataManagerPacientes.cargarPacientes();
+            listaUsuarios = dataManagerUsuarios.cargarUsuarios();
         } catch (Exception e) {
             // Si hay un error (ej. el archivo no existe), empezamos con una lista vacía
             listaMedicamentos = new ArrayList<>();
             listaPacientes = new ArrayList<>();
+            listaUsuarios = new ArrayList<>();
         }
     }
 
-    // --- MÉTODOS DE USUARIO  ---
+    // --- MÉTODOS DE USUARIO ---
+
     public Usuario autenticar(String id, String clave) throws Exception {
-        if (id.equals("admin") && clave.equals("admin")) {
-            return new Usuario(id, clave, "Administrador");
-        } else { // <-- Este 'else' es crucial
+        // Buscamos en la lista en memoria un usuario con el ID proporcionado.
+        Usuario usuario = listaUsuarios.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        // Si encontramos al usuario Y su clave coincide, el login es exitoso.
+        if (usuario != null && usuario.getClave().equals(clave)) {
+            return usuario;
+        } else {
+            // Si el usuario no existe o la clave es incorrecta, lanzamos un error.
             throw new Exception("Usuario o clave incorrectos");
         }
     }
+
+    // Este método es para un usuario que YA ESTÁ DENTRO del sistema (ej. desde el menú principal).
     public void cambiarClave(Usuario usuario, String claveActual, String claveNueva) throws Exception {
-        // ...
+        // 1. Validar que la clave actual sea correcta.
+        if (!usuario.getClave().equals(claveActual)) {
+            throw new Exception("La clave actual es incorrecta");
+        }
+
+        // 2. Actualizar el objeto en memoria.
+        usuario.setClave(claveNueva);
+
+        // 3. Persistir el cambio guardando la lista completa de usuarios al XML.
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
     }
+
+    // Este método es para el flujo de "Restaurar Clave" DESDE LA PANTALLA DE LOGIN.
     public void cambiarClave(String id, String claveActual, String claveNueva) throws Exception {
-        // ...
+        // 1. Buscamos al usuario por su ID en la lista en memoria.
+        Usuario usuarioEncontrado = listaUsuarios.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if (usuarioEncontrado == null) {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        // 2. Reutilizamos el otro método para hacer la validación y el cambio.
+        this.cambiarClave(usuarioEncontrado, claveActual, claveNueva);
     }
 
     // =======================================================
@@ -176,4 +214,98 @@ public class Service {
                 .filter(p -> p.getId().contains(filtro) || p.getNombre().toLowerCase().contains(filtro.toLowerCase()))
                 .collect(Collectors.toList());
     }
+    // === MÉTODOS CRUD COMPLETOS PARA MÉDICOS ===
+
+    public void createMedico(Medico m) throws Exception {
+        if (listaUsuarios.stream().anyMatch(u -> u.getId().equals(m.getId()))) {
+            throw new Exception("La cédula del usuario ya existe.");
+        }
+        listaUsuarios.add(m);
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    // === MÉTODO 'READ' AÑADIDO ===
+    public Medico readMedico(String id) throws Exception {
+        Usuario u = listaUsuarios.stream()
+                .filter(us -> us.getId().equals(id) && us instanceof Medico)
+                .findFirst().orElse(null);
+        if (u == null) {
+            throw new Exception("Médico no existe.");
+        }
+        return (Medico) u;
+    }
+
+    // === MÉTODO 'UPDATE' AÑADIDO ===
+    public void updateMedico(Medico m) throws Exception {
+        Medico medActual = this.readMedico(m.getId());
+        medActual.setNombre(m.getNombre());
+        medActual.setEspecialidad(m.getEspecialidad());
+        // La clave se actualiza con la funcionalidad de "cambiar clave"
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    // === MÉTODO 'DELETE' AÑADIDO ===
+    public void deleteMedico(String id) throws Exception {
+        Usuario u = this.readMedico(id);
+        listaUsuarios.remove(u);
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    public List<Medico> searchMedicos(String filtro) {
+        return listaUsuarios.stream()
+                .filter(u -> u instanceof Medico)
+                .map(u -> (Medico) u)
+                .filter(m -> m.getId().contains(filtro) || m.getNombre().toLowerCase().contains(filtro.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    // === MÉTODO 'GET' AÑADIDO ===
+    public List<Medico> getMedicos() {
+        return listaUsuarios.stream()
+                .filter(u -> u instanceof Medico)
+                .map(u -> (Medico) u)
+                .collect(Collectors.toList());
+    }
+
+    // === MÉTODOS CRUD COMPLETOS PARA FARMACEUTAS ===
+
+    public void createFarmaceuta(Farmaceuta f) throws Exception {
+        if (listaUsuarios.stream().anyMatch(u -> u.getId().equals(f.getId()))) {
+            throw new Exception("La cédula del usuario ya existe.");
+        }
+        listaUsuarios.add(f);
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    public Farmaceuta readFarmaceuta(String id) throws Exception {
+        Usuario u = listaUsuarios.stream()
+                .filter(us -> us.getId().equals(id) && us instanceof Farmaceuta)
+                .findFirst().orElse(null);
+        if (u == null) {
+            throw new Exception("Farmaceuta no existe.");
+        }
+        return (Farmaceuta) u;
+    }
+
+    public void updateFarmaceuta(Farmaceuta f) throws Exception {
+        Farmaceuta farmaceutaActual = this.readFarmaceuta(f.getId());
+        farmaceutaActual.setNombre(f.getNombre());
+        // La clave se actualiza con la funcionalidad de "cambiar clave"
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    public void deleteFarmaceuta(String id) throws Exception {
+        Usuario u = this.readFarmaceuta(id);
+        listaUsuarios.remove(u);
+        dataManagerUsuarios.guardarUsuarios(listaUsuarios);
+    }
+
+    public List<Farmaceuta> searchFarmaceutas(String filtro) {
+        return listaUsuarios.stream()
+                .filter(u -> u instanceof Farmaceuta)
+                .map(u -> (Farmaceuta) u)
+                .filter(f -> f.getId().contains(filtro) || f.getNombre().toLowerCase().contains(filtro.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
 }

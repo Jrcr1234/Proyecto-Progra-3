@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lista-usuarios>
+    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="medico">
+        <id>456</id>
+        <clave>456</clave>
+        <nombre>Ana Fernandez</nombre>
+        <tipo>Medico</tipo>
+        <especialidad>Dermatología</especialidad>
+    </usuario>
+</lista-usuarios>

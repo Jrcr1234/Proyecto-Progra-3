@@ -1,22 +1,31 @@
 package hospital.logic;
 
-public class Usuario {
-    // --- Atributos ---
-    private String id;
-    private String clave;
-    private String tipo; // Guardará si es "Administrador", "Médico" o "Farmaceuta"
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 
-    // --- Constructores ---
+// Anotaciones para que JAXB entienda la herencia
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso({Medico.class, Farmaceuta.class, Administrador.class})
+public abstract class Usuario {
+    protected String id;
+    protected String clave;
+    protected String nombre;
+    protected String tipo;
 
-    /**
-     * Constructor vacío
-     */
     public Usuario() {
         this.id = "";
         this.clave = "";
+        this.nombre = "";
         this.tipo = "";
     }
 
+    public Usuario(String id, String clave, String nombre, String tipo) {
+        this.id = id;
+        this.clave = clave;
+        this.nombre = nombre;
+        this.tipo = tipo;
+    }
     /**
      * Constructor con los parámetros básicos para un usuario.
      * @param id Cédula o identificador del usuario.
@@ -46,6 +55,14 @@ public class Usuario {
 
     public void setClave(String clave) {
         this.clave = clave;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getTipo() {
