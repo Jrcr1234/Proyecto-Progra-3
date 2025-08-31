@@ -307,5 +307,11 @@ public class Service {
                 .filter(f -> f.getId().contains(filtro) || f.getNombre().toLowerCase().contains(filtro.toLowerCase()))
                 .collect(Collectors.toList());
     }
+    public List<Farmaceuta> getFarmaceutas() {
+        return listaUsuarios.stream()
+                .filter(u -> u instanceof Farmaceuta)
+                .map(u -> (Farmaceuta) u)
+                .collect(Collectors.toList());
+    }
 
 }
