@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <lista-usuarios>
     <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="medico">
-        <id>M001</id>
-        <clave>M001</clave>
-        <nombre>Juan</nombre>
-        <tipo>Medico</tipo>
-        <especialidad>Dermatologo</especialidad>
-    </usuario>
-    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="farmaceuta">
         <id>123</id>
         <clave>123</clave>
+        <nombre>jose</nombre>
+        <tipo>Medico</tipo>
+        <especialidad>hggfdfgj</especialidad>
+    </usuario>
+    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="farmaceuta">
+        <id>1234</id>
+        <clave>1234</clave>
         <nombre>juan</nombre>
         <tipo>Farmaceuta</tipo>
+    </usuario>
+    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="administrador">
+        <id>admin</id>
+        <clave>admin</clave>
+        <nombre>Administrador del Sistema</nombre>
+        <tipo>Administrador</tipo>
+    </usuario>
+    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="medico">
+        <id>123</id>
+        <clave>123</clave>
+        <nombre>Dr. Carlos Rojas</nombre>
+        <tipo>Medico</tipo>
+        <especialidad>Cardiología</especialidad>
     </usuario>
 </lista-usuarios>

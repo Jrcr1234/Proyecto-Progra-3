@@ -18,7 +18,8 @@ public class Service {
     private List<Paciente> listaPacientes;
     private XmlDataManager dataManagerUsuarios;
     private List<Usuario> listaUsuarios;
-    // Aquí irían los data managers y listas para farmaceutas, etc.
+    private XmlDataManager dataManagerRecetas;
+    private List<Receta> listaRecetas;
 
     private Service() {
         try {
@@ -26,16 +27,20 @@ public class Service {
             dataManagerMedicamentos = new XmlDataManager("medicamentos.xml");
             dataManagerPacientes = new XmlDataManager("pacientes.xml");
             dataManagerUsuarios = new XmlDataManager("usuarios.xml");
+            dataManagerRecetas = new XmlDataManager("recetas.xml");
 
             // Cargamos la lista de medicamentos desde el XML al iniciar la aplicación
             listaMedicamentos = dataManagerMedicamentos.cargarMedicamentos();
             listaPacientes = dataManagerPacientes.cargarPacientes();
             listaUsuarios = dataManagerUsuarios.cargarUsuarios();
+            listaRecetas = dataManagerRecetas.cargarRecetas();
+
         } catch (Exception e) {
             // Si hay un error (ej. el archivo no existe), empezamos con una lista vacía
             listaMedicamentos = new ArrayList<>();
             listaPacientes = new ArrayList<>();
             listaUsuarios = new ArrayList<>();
+            listaRecetas = new ArrayList<>();
         }
     }
 
@@ -313,5 +318,30 @@ public class Service {
                 .map(u -> (Farmaceuta) u)
                 .collect(Collectors.toList());
     }
+
+    // =======================================================
+// ===          MÉTODOS PARA GESTIÓN DE RECETAS        ===
+// =======================================================
+
+    public void createReceta(Receta r) throws Exception {
+        // Regla de negocio: Generar un código único para la nueva receta
+        String nuevoCodigo = "REC-" + (listaRecetas.size() + 1);
+        r.setCodigo(nuevoCodigo);
+
+        // Validaciones
+        if (r.getPaciente() == null) {
+            throw new Exception("Se debe seleccionar un paciente.");
+        }
+        if (r.getLineasDetalle().isEmpty()) {
+            throw new Exception("La receta debe tener al menos un medicamento.");
+        }
+
+        // 1. Modifica la lista en memoria
+        listaRecetas.add(r);
+        // 2. Guarda la lista actualizada en el archivo XML
+        dataManagerRecetas.guardarRecetas(listaRecetas);
+    }
+
+// Más adelante añadiremos métodos para buscar y actualizar el estado de las recetas.
 
 }

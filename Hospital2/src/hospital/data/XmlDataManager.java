@@ -3,6 +3,7 @@ package hospital.data;
 import hospital.logic.Medicamento;
 import hospital.logic.Paciente;
 import hospital.logic.Usuario;
+import hospital.logic.Receta;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -53,6 +54,26 @@ class UsuariosWrapper {
     public List<Usuario> getUsuarios() { return usuarios; }
     public void setUsuarios(List<Usuario> usuarios) { this.usuarios = usuarios; }
 }
+
+// === AÑADE ESTA NUEVA CLASE WRAPPER PARA RECETAS ===
+@XmlRootElement(name = "lista-recetas")
+class RecetasWrapper {
+    private List<Receta> recetas;
+
+    public RecetasWrapper() {
+        recetas = new ArrayList<>();
+    }
+
+    @XmlElement(name = "receta")
+    public List<Receta> getRecetas() {
+        return recetas;
+    }
+
+    public void setRecetas(List<Receta> recetas) {
+        this.recetas = recetas;
+    }
+}
+// =======================================================
 
 public class XmlDataManager {
     private String filePath;
@@ -121,4 +142,26 @@ public class XmlDataManager {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(wrapper, new File("usuarios.xml"));
     }
+
+    // === NUEVOS MÉTODOS PARA RECETAS ===
+    public List<Receta> cargarRecetas() throws Exception {
+        JAXBContext context = JAXBContext.newInstance(RecetasWrapper.class);
+        File file = new File("recetas.xml");
+        if (!file.exists()) {
+            return new ArrayList<>(); // Si no hay archivo, devuelve una lista vacía
+        }
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        RecetasWrapper wrapper = (RecetasWrapper) unmarshaller.unmarshal(file);
+        return wrapper.getRecetas();
+    }
+
+    public void guardarRecetas(List<Receta> recetas) throws Exception {
+        JAXBContext context = JAXBContext.newInstance(RecetasWrapper.class);
+        RecetasWrapper wrapper = new RecetasWrapper();
+        wrapper.setRecetas(recetas);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(wrapper, new File("recetas.xml"));
+    }
+    // ========================================================
 }

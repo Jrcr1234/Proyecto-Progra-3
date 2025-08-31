@@ -18,10 +18,4 @@
         <fechaNacimiento>2011-08-18T17:15:44.859-06:00</fechaNacimiento>
         <telefono>56545455</telefono>
     </paciente>
-    <paciente>
-        <id>222</id>
-        <nombre>ana</nombre>
-        <fechaNacimiento>2009-08-14T12:47:35.560-06:00</fechaNacimiento>
-        <telefono>456233</telefono>
-    </paciente>
 </lista-pacientes>

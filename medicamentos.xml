@@ -15,14 +15,4 @@
         <nombre>Acetaminofén</nombre>
         <presentacion>100 mg tableta</presentacion>
     </medicamento>
-    <medicamento>
-        <codigo>121</codigo>
-        <nombre>avi</nombre>
-        <presentacion>10g</presentacion>
-    </medicamento>
-    <medicamento>
-        <codigo>213</codigo>
-        <nombre>ace</nombre>
-        <presentacion>12g</presentacion>
-    </medicamento>
 </lista-medicamentos>
