@@ -34,7 +34,7 @@ public class View {
             ImageIcon pacientesIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/paciente.png")), tabIconSize, tabIconSize);
             tabbedPane.addTab("Pacientes", pacientesIcon, this.pacientesView.getPanel());
 
-            // --- MÓDULO DE FARMACEUTAS ---
+           // --- MÓDULO DE FARMACEUTAS ---
             this.farmaceutasView = new hospital.presentation.admin.farmaceutas.View();
             hospital.presentation.admin.farmaceutas.Model farModel = new hospital.presentation.admin.farmaceutas.Model();
             new hospital.presentation.admin.farmaceutas.Controller(this.farmaceutasView, farModel);
@@ -60,11 +60,5 @@ public class View {
 
     public JPanel getPanel() {
         return panel;
-    }
-    // === MÉTODO 'scaleIcon' QUE FALTABA ===
-    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImg);
     }
 }

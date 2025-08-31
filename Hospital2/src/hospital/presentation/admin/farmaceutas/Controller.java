@@ -2,22 +2,22 @@ package hospital.presentation.admin.farmaceutas;
 
 import hospital.logic.Farmaceuta;
 import hospital.logic.Service;
-import hospital.presentation.admin.farmaceutas.Model;
-import hospital.presentation.admin.farmaceutas.View;
-
 import javax.swing.*;
+import javax.swing.SwingWorker;
 import java.util.List;
 
 public class Controller {
 
-    private hospital.presentation.admin.farmaceutas.View view;
-    private hospital.presentation.admin.farmaceutas.Model model;
+    private View view;
+    private Model model;
 
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
         view.setModel(model);
         view.setController(this);
+
+        view.init();
         try {
             model.setList(Service.instance().getFarmaceutas());
             model.setCurrent(new Farmaceuta());

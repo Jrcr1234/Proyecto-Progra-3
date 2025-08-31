@@ -26,17 +26,6 @@ public abstract class Usuario {
         this.nombre = nombre;
         this.tipo = tipo;
     }
-    /**
-     * Constructor con los parámetros básicos para un usuario.
-     * @param id Cédula o identificador del usuario.
-     * @param clave Contraseña para el ingreso.
-     * @param tipo Rol del usuario dentro del sistema.
-     */
-    public Usuario(String id, String clave, String tipo) {
-        this.id = id;
-        this.clave = clave;
-        this.tipo = tipo;
-    }
 
     // --- Getters y Setters ---
     // Métodos para acceder y modificar los atributos de forma controlada.

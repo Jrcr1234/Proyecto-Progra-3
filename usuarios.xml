@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <lista-usuarios>
     <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="medico">
-        <id>456</id>
-        <clave>456</clave>
-        <nombre>Ana Fernandez</nombre>
+        <id>M001</id>
+        <clave>M001</clave>
+        <nombre>Juan</nombre>
         <tipo>Medico</tipo>
-        <especialidad>Dermatología</especialidad>
+        <especialidad>Dermatologo</especialidad>
+    </usuario>
+    <usuario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="farmaceuta">
+        <id>123</id>
+        <clave>123</clave>
+        <nombre>juan</nombre>
+        <tipo>Farmaceuta</tipo>
     </usuario>
 </lista-usuarios>

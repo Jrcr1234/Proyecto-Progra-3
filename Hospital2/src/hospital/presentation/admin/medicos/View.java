@@ -1,6 +1,7 @@
 package hospital.presentation.admin.medicos;
 
 import hospital.logic.Medico;
+import javax.swing.SwingUtilities;
 import hospital.presentation.util.GuiUtils;
 import javax.swing.*;
 import java.awt.*;

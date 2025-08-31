@@ -7,12 +7,6 @@
         <telefono>553322221</telefono>
     </paciente>
     <paciente>
-        <id>222</id>
-        <nombre>Ana</nombre>
-        <fechaNacimiento>2011-08-12T01:06:41.339-06:00</fechaNacimiento>
-        <telefono>444444</telefono>
-    </paciente>
-    <paciente>
         <id>123</id>
         <nombre>fer</nombre>
         <fechaNacimiento>2012-08-04T01:16:11.607-06:00</fechaNacimiento>
@@ -23,5 +17,11 @@
         <nombre>jose</nombre>
         <fechaNacimiento>2011-08-18T17:15:44.859-06:00</fechaNacimiento>
         <telefono>56545455</telefono>
+    </paciente>
+    <paciente>
+        <id>222</id>
+        <nombre>ana</nombre>
+        <fechaNacimiento>2009-08-14T12:47:35.560-06:00</fechaNacimiento>
+        <telefono>456233</telefono>
     </paciente>
 </lista-pacientes>
