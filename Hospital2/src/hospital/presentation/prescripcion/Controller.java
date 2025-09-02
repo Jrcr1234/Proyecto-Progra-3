@@ -46,9 +46,25 @@ public class Controller {
     }
 
     public void agregarMedicamento() {
-        // En el siguiente paso, aquí abriremos la ventana para agregar medicamentos
-        JOptionPane.showMessageDialog(view.getPanel(), "Aquí se abrirá la búsqueda de medicamentos.");
-    }
+        // Creamos un JDialog modal para la nueva ventana
+        JDialog dialog = new JDialog(Application.getWindow(), "Agregar Medicamento", true);
+
+        // Creamos el trío MVC del módulo 'medicamento_add'
+        hospital.presentation.prescripcion.medicamento_add.Model addModel = new hospital.presentation.prescripcion.medicamento_add.Model();
+        hospital.presentation.prescripcion.medicamento_add.View addView = new hospital.presentation.prescripcion.medicamento_add.View();
+
+        // Le pasamos el 'model' de la prescripción principal para que nos pueda devolver la LineaDetalle
+        new hospital.presentation.prescripcion.medicamento_add.Controller(addView, addModel, dialog, this.model);
+
+        // Inicializamos la vista
+        addView.init();
+
+        // Configuramos y mostramos el diálogo
+        dialog.setContentPane(addView.getPanel());
+        dialog.pack();
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(this.view.getPanel()); // Para que aparezca centrado
+        dialog.setVisible(true); }
 
     public void registrarReceta() {
         Receta receta = new Receta();
