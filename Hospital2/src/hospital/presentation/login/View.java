@@ -32,6 +32,7 @@ public class View {
             int headerIconSize = 128;
             headerIconLbl.setIcon(GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/lock_icon.png")), headerIconSize, headerIconSize));
             ingresarBtn.setIcon(GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/inicio-de-sesion.png")), buttonIconSize, buttonIconSize));
+            cambiarClaveBtn.setIcon(GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/contrasena.png")), buttonIconSize, buttonIconSize));
             salirBtn.setIcon(GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/Cancelar.png")), buttonIconSize, buttonIconSize));
         } catch (Exception e) { System.err.println("Error al cargar iconos de login: " + e.getMessage()); }
     }

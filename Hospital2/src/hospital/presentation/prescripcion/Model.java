@@ -36,4 +36,13 @@ public class Model extends AbstractModel {
         this.lineas = lineas;
         firePropertyChange(LINEAS, old, this.lineas);
     }
+
+    public void removeLinea(int index) {
+        if (index >= 0 && index < lineas.size()) {
+            List<LineaDetalle> old = new ArrayList<>(this.lineas); // Copia para el firePropertyChange
+            lineas.remove(index);
+            // Notificamos a la vista que la lista ha cambiado
+            firePropertyChange(LINEAS, old, this.lineas);
+        }
+    }
 }

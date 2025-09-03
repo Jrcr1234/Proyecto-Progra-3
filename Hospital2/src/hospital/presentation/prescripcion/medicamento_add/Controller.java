@@ -5,6 +5,7 @@ import hospital.logic.LineaDetalle;
 import hospital.logic.Medicamento;
 import hospital.logic.Service;
 import javax.swing.JDialog;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -72,10 +73,14 @@ public class Controller {
             nuevaLinea.setIndicaciones(view.getIndicaciones());
             nuevaLinea.setDuracionTratamiento(view.getDuracion());
 
-            // La añadimos a la lista de líneas en el modelo de la prescripción principal
-            prescripcionModel.getLineas().add(nuevaLinea);
-            // Forzamos una notificación para que la tabla principal se actualice
-            prescripcionModel.setLineas(prescripcionModel.getLineas());
+            // 1. Creamos una NUEVA lista que es una copia de la lista actual.
+            List<LineaDetalle> nuevaListaLineas = new ArrayList<>(prescripcionModel.getLineas());
+
+            // 2. Añadimos el nuevo medicamento a la NUEVA lista.
+            nuevaListaLineas.add(nuevaLinea);
+
+            // 3. Pasamos la NUEVA lista al modelo. Esto dispara la notificación correctamente.
+            prescripcionModel.setLineas(nuevaListaLineas);
 
             this.cancelar(); // Cerramos el diálogo
         } catch(Exception e) {

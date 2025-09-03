@@ -2,6 +2,7 @@ package hospital.presentation.prescripcion.dosis_details;
 
 import hospital.logic.LineaDetalle;
 import javax.swing.JDialog;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -21,21 +22,31 @@ public class Controller {
 
     public void guardar() {
         try {
-            LineaDetalle nuevaLinea = new LineaDetalle();
-            nuevaLinea.setMedicamento(model.getSeleccionado());
-            nuevaLinea.setCantidad(view.getCantidad());
-            nuevaLinea.setIndicaciones(view.getIndicaciones());
-            nuevaLinea.setDuracionTratamiento(view.getDuracion());
+            if (model.getLineaExistente() != null) {
+                // MODO EDICIÓN: Actualizamos el objeto existente
+                LineaDetalle linea = model.getLineaExistente();
+                linea.setCantidad(view.getCantidad());
+                linea.setIndicaciones(view.getIndicaciones());
+                linea.setDuracionTratamiento(view.getDuracion());
 
-            // 1. Obtenemos la lista actual del modelo principal
-            List<LineaDetalle> lineasActuales = prescripcionModel.getLineas();
-            // 2. Le añadimos la nueva línea
-            lineasActuales.add(nuevaLinea);
-            // 3. Volvemos a establecer la lista en el modelo.
-            //    ESTO FORZARÁ a que se ejecute firePropertyChange y se notifique a la vista.
-            prescripcionModel.setLineas(lineasActuales);
+                // Forzamos la actualización de la tabla principal
+                prescripcionModel.setLineas(new ArrayList<>(prescripcionModel.getLineas()));
+
+            } else {
+                // MODO AGREGAR: La lógica que ya tenías y que corregimos
+                LineaDetalle nuevaLinea = new LineaDetalle();
+                nuevaLinea.setMedicamento(model.getSeleccionado());
+                nuevaLinea.setCantidad(view.getCantidad());
+                nuevaLinea.setIndicaciones(view.getIndicaciones());
+                nuevaLinea.setDuracionTratamiento(view.getDuracion());
+
+                List<LineaDetalle> nuevaListaLineas = new ArrayList<>(prescripcionModel.getLineas());
+                nuevaListaLineas.add(nuevaLinea);
+                prescripcionModel.setLineas(nuevaListaLineas);
+            }
 
             this.cancelar(); // Cerramos el diálogo
+
         } catch (Exception e) {
             view.mostrarError("Datos de dosis inválidos.");
         }

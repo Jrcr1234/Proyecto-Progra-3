@@ -1,6 +1,8 @@
 package hospital.presentation.prescripcion.paciente_search;
 
 import hospital.logic.Paciente;
+import hospital.presentation.util.GuiUtils;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,6 +26,22 @@ public class View implements PropertyChangeListener {
     }
 
     public void init() {
+
+        // === CÓDIGO PARA AÑADIR ICONOS A LOS BOTONES ===
+        try {
+            int iconSize = 24;
+
+
+            ImageIcon seleccionarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/ok.png")), iconSize, iconSize);
+            seleccionarBtn.setIcon(seleccionarIcon);
+
+            ImageIcon cancelarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/cancel.png")), iconSize, iconSize);
+            cancelarBtn.setIcon(cancelarIcon);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar los iconos de los botones: " + e.getMessage());
+        }
+        // =======================================================
         // TODA LA LÓGICA DEL CONSTRUCTOR SE MUEVE AQUÍ
         filtroCmb.setModel(new DefaultComboBoxModel<>(new String[]{"Nombre", "Cédula"}));
 

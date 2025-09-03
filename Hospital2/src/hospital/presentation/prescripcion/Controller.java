@@ -1,5 +1,6 @@
 package hospital.presentation.prescripcion;
 
+import hospital.logic.LineaDetalle;
 import hospital.logic.Receta;
 import hospital.logic.Service;
 import hospital.application.Application;
@@ -65,6 +66,48 @@ public class Controller {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(this.view.getPanel()); // Para que aparezca centrado
         dialog.setVisible(true); }
+
+    public void eliminarMedicamento(int rowIndex) {
+        if (rowIndex < 0) {
+            // No hay ninguna fila seleccionada
+            JOptionPane.showMessageDialog(view.getPanel(), "Debe seleccionar el medicamento a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Le pedimos al modelo que elimine la línea en el índice seleccionado
+        model.removeLinea(rowIndex);
+    }
+
+    public void modificarMedicamento(int index) {
+        if (index < 0) {
+            JOptionPane.showMessageDialog(view.getPanel(), "Debe seleccionar el medicamento a modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Obtenemos la línea de detalle que el usuario quiere editar
+        LineaDetalle lineaParaModificar = model.getLineas().get(index);
+
+        // --- Abrimos el diálogo de detalles en MODO EDICIÓN ---
+        JDialog detailsDialog = new JDialog(Application.getWindow(), "Modificar Dosis", true);
+
+        // Creamos el MVC para el diálogo, pero le pasamos la línea completa
+        hospital.presentation.prescripcion.dosis_details.Model detailsModel =
+                new hospital.presentation.prescripcion.dosis_details.Model(lineaParaModificar); // Usaremos un nuevo constructor
+
+        hospital.presentation.prescripcion.dosis_details.View detailsView =
+                new hospital.presentation.prescripcion.dosis_details.View();
+
+        new hospital.presentation.prescripcion.dosis_details.Controller(
+                detailsView, detailsModel, detailsDialog, this.model);
+
+        detailsView.init();
+
+        // código para configurar y mostrar el diálogo
+        detailsDialog.setContentPane(detailsView.getPanel());
+        detailsDialog.pack();
+        detailsDialog.setResizable(false);
+        detailsDialog.setLocationRelativeTo(this.view.getPanel());
+        detailsDialog.setVisible(true);
+    }
 
     public void registrarReceta() {
         Receta receta = new Receta();

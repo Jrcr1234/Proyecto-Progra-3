@@ -1,12 +1,15 @@
 package hospital.presentation.prescripcion.dosis_details;
 
 import hospital.logic.Medicamento;
+import hospital.logic.LineaDetalle;
+import hospital.presentation.util.GuiUtils;
+
 import javax.swing.*;
 
 public class View {
     private JPanel panel;
-    private JComboBox cantidadCmb;
-    private JComboBox duracionCmb;
+    private JComboBox<Integer> cantidadCmb;
+    private JComboBox<Integer> duracionCmb;
     private JTextArea indicacionesFld;
     private JButton guardarBtn;
     private JButton cancelarBtn;
@@ -17,6 +20,22 @@ public class View {
     public View() {}
 
     public void init() {
+
+        // === CÓDIGO PARA AÑADIR ICONOS A LOS BOTONES ===
+        try {
+            int iconSize = 24;
+
+
+            ImageIcon guardarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/guardar.png")), iconSize, iconSize);
+            guardarBtn.setIcon(guardarIcon);
+
+            ImageIcon cancelarIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/cancel.png")), iconSize, iconSize);
+            cancelarBtn.setIcon(cancelarIcon);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar los iconos de los botones: " + e.getMessage());
+        }
+        // =======================================================
 
         // Conectamos los botones
         guardarBtn.addActionListener(e -> controller.guardar());
@@ -51,5 +70,13 @@ public class View {
     // --- Métodos de enlace MVC ---
     public JPanel getPanel() { return panel; }
     public void setController(Controller controller) { this.controller = controller; }
-    public void setModel(Model model) { this.model = model; }
+    public void setModel(Model model) { this.model = model;
+        // --- LÓGICA PARA RELLENAR DATOS ---
+        if (model.getLineaExistente() != null) {
+            LineaDetalle linea = model.getLineaExistente();
+            cantidadCmb.setSelectedItem(linea.getCantidad());
+            duracionCmb.setSelectedItem(linea.getDuracionTratamiento());
+            indicacionesFld.setText(linea.getIndicaciones());
+        }
+    }
 }

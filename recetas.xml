@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lista-recetas>
+    <receta>
+        <codigo>REC-1</codigo>
+        <paciente>
+            <id>111</id>
+            <nombre>Fernando</nombre>
+            <fechaNacimiento>2015-08-14T01:05:52.537-06:00</fechaNacimiento>
+            <telefono>553322221</telefono>
+        </paciente>
+        <fechaConfeccion>2025-09-03T01:04:34.170-06:00</fechaConfeccion>
+        <fechaRetiro>2025-09-10T01:04:19.097-06:00</fechaRetiro>
+        <estado>Confeccionada</estado>
+        <lineasDetalle>
+            <medicamento>
+                <codigo>A101</codigo>
+                <nombre>Acetaminofén</nombre>
+                <presentacion>500 mg tableta</presentacion>
+            </medicamento>
+            <cantidad>7</cantidad>
+            <indicaciones>1 vez al dia</indicaciones>
+            <duracionTratamiento>7</duracionTratamiento>
+        </lineasDetalle>
+        <lineasDetalle>
+            <medicamento>
+                <codigo>A101</codigo>
+                <nombre>Acetaminofén</nombre>
+                <presentacion>500 mg tableta</presentacion>
+            </medicamento>
+            <cantidad>7</cantidad>
+            <indicaciones>dascc</indicaciones>
+            <duracionTratamiento>6</duracionTratamiento>
+        </lineasDetalle>
+    </receta>
+</lista-recetas>
